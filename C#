@@ -2,3 +2,9 @@ $Arrays are strongly typed.
 $Arrays cannot grow in size once they are initialized.
 $If there is no code in between the case statements and if that case was passed then it will fall into the next case where there is code
 and that code will be executed.
+$Methods can be defined in two types
+  1.Static Method: A method is said to be static if it contains a static keyword in the method to invoke the static method use the class
+    name instead.
+  2.Instance Method: A method is said to be instance method if there is no static keyword to invoke a instance method create a 
+    object/instance and call the method with the instance
+$
