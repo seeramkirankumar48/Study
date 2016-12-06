@@ -1,2 +1,4 @@
-Arrays are strongly typed.
-Arrays cannot grow in size once they are initialized.
+$Arrays are strongly typed.
+$Arrays cannot grow in size once they are initialized.
+$If there is no code in between the case statements and if that case was passed then it will fall into the next case where there is code
+and that code will be executed.
