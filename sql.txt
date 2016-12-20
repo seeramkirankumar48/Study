@@ -1,0 +1,90 @@
+1.ssms is not a server by itself.it is a client tool which is
+used to connect to the database server.
+
+2.whenever we create a database two files are created automatically,
+	mdf-master data file
+	ldf-log data file
+	create database database_name;
+	alter database database_name set single_user with rollback immediate;
+	alter database database_name modify name='new_name'
+			(or)
+	sp_renamedb 'oldname','new name'  
+
+3.foreign key is used to make data integrity and intact
+  whatever the data entered into the table is checked in the
+  primary column of the referenced table 
+  
+	alter table table1_name add constraint constraint_name
+	foreign key(table1_name_column) references table2_name(table2_name_column)
+
+4.default constraint:if you do not enter the value then the default value will be kicked in
+	
+	alter table table_name add constraint constraint_name Default default_value for column_name
+  to add new column:
+	alter table table_name add column_name data_type
+  to drop constraint:
+        alter table table_name drop constraint constraint_name
+
+5.cascading referential integrity:
+	if the values in the referenced table is deleted/updated then the records in the foreign key 
+  table become the orphan records.
+	by default four actions are performed:
+	1.noaction--no action is performed.
+	2.setdefault--sets to default value.
+	3.setnull--sets to null
+	4.cascade--deletes/updates to the latest value.
+	
+	alter table table_name add constraint constraint_name
+	foreign key(column) references table1_name(column)
+	on delete set default/cascade
+
+6.Check constraint is used to check the values before inserting into the table
+  the value to be checked to be an boolean expression
+	alter table table_name add constraint constraint_name CHeck (expression)
+
+7.identity:value can be incremented based on the seed and increment value.
+	create table tbl_name(column_name data_type identity(seed,increment))
+  deleting the values in the table doesn't reset the identity column
+  to fill the gaps in the identity row use:
+   SET identity_insert tbl_name ON;& values to the table should be provided along with the column names
+   when identity_insert is turned ON we cannot insert the values by not providing the identity column value.
+  To reset the identity value use:
+	DBCC checkident(tbl_name,RESEED,0)
+
+8.to generate the identity value:
+   scope_identity():it will return the identity value with in the same statement scope and same session
+   @@identity:it will return the identity value with in the same session across any scope
+   ident_current('tbl_name'):it will return the identity value for the particular table across any session
+
+9.Unique key:Since a table contains only one primary key.to maintain uniqueness across all the columns unique key is used.
+   unique key allows one null value.
+  alter table tbl_name add constraint constraint_name unique(column_name)
+
+10.Select:
+   when distinct is used for two or more columns then the distinct values are returned across all the columns specified.
+   if there are multiple filter use IN.
+   Between 10 and 25 will return the values in between 10&25 and 10 value & 25 value.
+   wildcards:
+   %-represents occurence of zero or more characters
+   _-represents occurence of exactly one character.
+   to select the name's that start with the specified characters
+    select * from table where name like '[MST]%'-- retrives names start with M,S,T
+    doesn't start with MST use '[^MST]%'
+   order by-- used to sort the results either in asc(default) or desc order.
+   sort the order of two or more columns by:
+   select * from tblPerson orderby name asc,Age desc
+   If a table has large number of rows retrieving the data takes lot of time if you want to retrieve the sample data use top keyword.
+   select top 10 * from table_name
+   (or)
+   select top 10 name,age from tblPerson
+
+11.
+
+
+note points::
+1.a table can have only one primary key but more than one unique key.
+2.while selecting entire column list use entire column list rather than using "*"
+  this will help in improving the performance of the query.
+3.to return the highest salary of the person in the table:
+  select top 1 * from tblPerson order by salary desc
+4. 
