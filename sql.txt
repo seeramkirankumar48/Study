@@ -78,7 +78,193 @@ used to connect to the database server.
    (or)
    select top 10 name,age from tblPerson
 
-11.
+11.group by:
+	group by will group by the columns in the group list it is used along with the aggregate functions.
+   Aggregate=SUM,MAX,MIN,Count
+   if the column is not in the group list then error will be thrown.
+ diff b/w where and having
+  1.
+ 	a.where is used in select,update,delete,insert
+ 	b.having is used in select
+  2.
+	a.where is used after select and before group by
+	b.having is used after groupby
+  3.     
+	a.in where we cannot apply aggregate function
+	b.in having we can apply aggregate function
+
+12.joins are used to retrieve data from more than one table
+    inner join:retrieve common rows from the tables.
+    outer join:
+	left join:retrieves common rows+ unmatched rows in the left table
+	right join:retrieves common rows+ unmatched rows in the right table
+	full join:retrieves common rows+ unmatched rows in the left table+ unmatched rows in the right table
+    cross join: cartesian product rows ::rows in first table multiplied by rows in second table
+	cross join doesn't require on condition
+
+	select column_list 
+	from table1 join table2 on condition
+	join table3 on condition
+
+13.Advanced or intelligent joins::
+     Advanced joins are used to retrieve the data from the unmatched rows in the left table
+	select column_list
+	from table1 left join table2 on table1.column1=table2.column1
+	where table2.column1 is null
+     Advanced joins are used to retrieve the data from the unmatched rows in the right table
+	select column_list
+	from table1 right join table2 on table1.column1=table2.column1
+	where table1.column1 is null
+     Advanced joins are used to retrieve the data from the unmatched rows in the left table+unmatched rows in the right table.
+	select column_list
+	from table1 full join table2 on table1.column1=table2.column1
+	where table2.column1 is null
+	OR
+	table1.column1 is null
+
+14.self join:joining the table with itself.
+      select column_list from table1 join table1 on
+      table1.column1=table2.column2
+
+15.ways to replace null values:
+	ISNULL:ISNULL(expression,replacement_value)
+	case stmt:case when exp then '' else '' end
+	COALESCE
+
+16.COALESCE:returns the first non-null value.
+	COALESCE(firstname,middlename,lastname)
+
+17.UNION && unionALL: used to select rows from two or more select queries.
+   unionALL-combines all the rows irrespective of the duplicate values
+   union--combines all the rows and eliminates the duplicate values.
+   for union or unionall to work the datatype,number should be same.
+
+   diff b/w union & joins:
+   1.
+	a.union is used to combine the resultset of two or more select queries.
+	b.join is used to select the resultset based on the logical grouping of two or more tables.
+   2.
+	a.union is used to combine the row resultset from 2 or more tables.
+	b.join is used to combine the column resultset from 2 or more tables.
+
+18.Stored Procedures:
+      SP's saves the group of sql queries and can be used as many times.
+	
+	create/Alter procedure procedure_name 
+	@param1 data_type,@param2 data_type
+	WITH Encryption //if you want the procedure to be encrypted(cannot be viewed with sp_helptext)
+	AS
+	Begin
+	SQL_queries
+	END
+	
+	To execute:
+	exec procedure_name @param1_value,@param2_value
+	exec procedure_name @param2=param2_value,@param1=param1_value
+
+	To drop procedure:
+	drop procedure procedure_name
+
+19.Procedures with output parameters:
+	returns value from the sp's
+	
+	create procedure procedure_name
+	@param1 datatype
+	@param2 datatype out
+	as 
+	begin
+	//assign value to the out parameter
+	select @param2=Count(ID) from tblEmployee
+	end
+
+	To execute
+	declare @empcount int
+	execute proc_name param_value,@empCount out
+	print @empcount
+        (or)	
+	declare @empcount int
+	execute proc_name @param2=@empCount out,@param1=Param1_value
+	print @empcount
+	
+   System SP's:
+	sp_help:gives metadata about the SP
+	sp_helptext:gives the definition of SP
+	sp_depends:gives the depends of the database object
+
+20.SP return Values:
+   the return value is used to indicate whether the Sp got executed successfully or not.
+   the return value return 0-success or 1-failure.
+   the return value returns only integer value.
+
+	create proc proc_name
+	as 
+	begin
+	return (select count(ID) from tblEmployee)
+	end
+	
+	To execute
+	declare @Count int
+	exec @Count=proc_name
+	Print @Count
+
+21.Uses of SP's over Adhoc queries:
+	1.retains and uses code execution plan
+	2.code reusability
+	3.reduces n/w traffice
+	4.provides security (finer grained access--By providing access only to the proc not to the underlying tables).
+	5.Avoids Sql injection attack (either by SP's or parameterized queries)
+
+22.Built in String functions:
+   1.Ascii:select ASCII('A')
+   2.CHAR:select CHAR(65)
+   3.LTRIM:removes the spaces in the front
+   4.RTRIM:removes the spaces in the right
+   5.LEN:returns the length of the string and it ignores the spaces on the right hand side.
+   6.Lower:converts the string to lowercase
+   7.Upper:converts the string to uppercase
+   8.reverse:converts the string to reverse
+
+23.more used string functions
+   1.LEFT:gets the string from Left side --LEFT('aaa.com',5)-com
+   2.Right:gets the string from right side --RIGHT('aaa.com',3)-com
+   3.CHARindex:returns the position of the char in the expression
+	CHARINDEX('@','aaa@aaa.com',1)--4
+	CHARINDEX('@','aaa@aaa.com',1)+1--5
+	CHARINDEX(string_to_search,string,occurence)
+   4.substring:returns the substring from the string expression
+	SUBSTRING('aaa@aaa.com',4,7)--aaa.com
+	SUBSTRING(string,from_which_part,from_which_part_length)
+
+24.some more string handling functions::
+   1.Replicate:replicates the particular string with no.of times
+	select replicate('*',5)---*****
+   2.space:space function gives spaces for 'n' number of times specified
+	select space(5) 
+   3.patindex:patindex is used to check pattern of the string in the given string
+	select patindex('%@outlook.com',seeramkirankumar@outlook.com)--gives index
+   4.replace:replaces the string with another one
+	select replace('microsoft.com','com','net')
+   5.stuff:stuff's the string with the character specified.
+	select stuff('88888',2,3(length_string),'*')-8***8
+
+25.DateTime datatypes:
+	1.time:only time
+	2.date:only date
+	3.datetime:date and time with ns
+	4.datetime2:date and time with ns(with more precision)
+	5.datetimeoffset:offset with UTC
+	6.smalldatetime:date time without ns
+	Getdate()--is used to get the current data where the sql server is installed
+	sysdatetime()-more fractional than ns
+	sysdatetimeoffset()-with offset
+
+26.
+
+
+
+
+	
+
 
 
 note points::
@@ -87,4 +273,8 @@ note points::
   this will help in improving the performance of the query.
 3.to return the highest salary of the person in the table:
   select top 1 * from tblPerson order by salary desc
-4. 
+4.tables are relate to each other using foregin key.
+5.to check whether the data contains the null value use -- where column_value is null
+6.for retreiving the count value instead of retrieving it from count(*)(uses lot of time) use a column name specified.
+7.for cross joins on condition is not required.
+8.
