@@ -258,8 +258,59 @@ used to connect to the database server.
 	sysdatetime()-more fractional than ns
 	sysdatetimeoffset()-with offset
 
-26.
+26.ISDate(): isdate functions validates whether the passed argument is an valid date or not
+	select isdate(getdate())
+	isdate gives 0 for failure and 1 for success.
+   isdate() function returns the 0(failure) for datetime2 datatypes eventhough it is a valid date returns 0 because of long precision
 
+   Day():select day(getdate())--day of the getdate()
+   month():select month(getdate())--month of the getdate()
+   year():select year(getdate())--year of the getdate()
+   weekday():weekday function returns the name of the date.
+   weekday():select datename(weekday,getdate())--dayname of the getdate()--EX:monday
+
+27.datepart():datepart function returns the number of that particular date passed.
+	the diff b/w datename() and datepart() is datepart returns the integer and datename returns nvarchar.
+   select datepart(day,'some_date')--if it is sunday--returns 1
+   dateadd():select dateadd(day/month/year,number_of_days_to_add,date)
+   datediff():select datediff(day/month/year,old_date,new_date)
+
+28.cast and convert:Both are used to convert datatype of one into another.
+	cast:cast is based on ansi(portable across databases) standards
+	select cast(empno as nvarchar) as 'EmpNo'
+	select cast(getdate() as date)
+	convert:convert is MS standards
+	select convert(data_type,String_to_convert,style[optional])
+	select convert(nvarchar,getdate(),101)
+	In convert to control the formatting of (styles) the datatype needs to be converted to nvarchar otherwise the style property is ignored.
+
+29.mathematical functions:
+	abs:gives a positive number
+		select abs(-100)=100
+	ceiling:top value
+		select ceiling(101.5)=102;select ceiling(-15.2)=15
+	floor:low value
+		select floor(101.5)=101;select floor(-15.2)=16
+	power:power value
+		select power(2,3)=2^3=8
+	rand:rand value returns the random value between 0 and 1 if no parameter is passed.
+		select rand([parameter(optional)])
+	if a parameter is passed then rand returns the same value.
+	to generate a random number between 1000
+	select rand()*1000;--this will give fractional part.
+	to eliminate the fractional part use floor or ceil:
+	select floor(rand()*1000)
+	square:squares the number
+	select square(2)=2^2=4
+	sqrt:square root value
+	select sqrt(4)=2
+	round:rounds the passed value to the nearest number
+	select round(number,length_to_be_rounded,[truncate or round]) 
+	optional parameter:0-round;non-zero-truncate	
+	select round(number)
+	///more clarity needed...
+
+30.
 
 
 
