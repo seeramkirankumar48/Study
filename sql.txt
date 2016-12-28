@@ -310,13 +310,54 @@ used to connect to the database server.
 	select round(number)
 	///more clarity needed...
 
-30.
+30.Scalar Function:
+	scalar function returns one and only single value.
+   scalar function may or maynot have parameters.
+   the returned value can be of any datatype except text,ntext,image,cursor and timestamp.
+	syntax:
+		create function fun_name(@parameter data_type,....)
+		returns data_type
+		AS
+		BEGIN
+		return parameter_value
+		END
+	to call the function:use two part:dbo.fun_name(); (or) database_name.dbo.fun_name();
+
+31.inline Table Valued Functions:
+	Returns a table
+	syntax:
+		create function fun_name(@parameter1 data_type)
+		returns table
+		as
+		return (select query)
+	while defining the table valued functions don't use begin and end
+	The end result of the return table is dependent on the select query defined in the function.
+	The table valued functions can be joined with the other tables.
+	to call the table valued function:(call as it was a table)
+	select * from fun_name('param_value')
+	underlying table can be updated with the help of inline table valued functions
+	update fun_name set value=new_value where value=old_value
+	update ufn_Employees set gender='M' where empId=1
 
 
+32.multi statement table valued functions:
+	returns the table
+	syntax:
+		create function fun_name()
+		returns @Table_variable Table(param1 datatype1,param2 datatype2)
+		as
+		begin
+		insert into @Table
+		select @param1_value,@param2_Value from table
 
-	
+		return
+		end
+	to select :: select * from fun_name()
+	only return is specified to return the table.
+	inline tabled valued functions has better performance compared to the multistatement table valued functions.
+	it's possible to update the underlying table with the help of inline tabled functions which is not possible with multi statement table valued functions.	
 
-
+33.
 
 note points::
 1.a table can have only one primary key but more than one unique key.
@@ -328,4 +369,7 @@ note points::
 5.to check whether the data contains the null value use -- where column_value is null
 6.for retreiving the count value instead of retrieving it from count(*)(uses lot of time) use a column name specified.
 7.for cross joins on condition is not required.
-8.
+8.diff b/w procedures and scalar defined functions are:
+	A.scalar functions can be used in the select queries.
+	B.Procedures cant be used in select queries.
+9.
