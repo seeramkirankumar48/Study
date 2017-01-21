@@ -1,0 +1,299 @@
+3.Boolean occupies 1 bit of memory,char occupies 16 bits
+4.Verbatim literal eliminates the escape sequences and prints the statement as specified.
+	cw(@"Hello\n123")--Hello\n123
+6.to store the nullable types into the datatypes
+	use:: int? i=null;
+  By default the integral data types are not allowed to store the null values.
+7.to convert the string datatypes to integer data types we can use int.Parse() or int.TryParse() Methods
+	int.parse(string s)
+	int.TryParse returns bool value whether the parsing is successful or not and stores the output in the out variable
+
+	bool b=int.TryParse(string s,out result) 
+8.Arrays are used to store the homogenous type of data
+  Arrays once initialized cannot grow in size
+  Arrays are strongly typed.
+  int[] Arr=new int[3];
+  Arr[0]=0;
+  Arr[1]=1;
+  Arr[2]=2;
+  //initialize and assign in the same line.
+  int[] Odd={1,3,5};
+9.Single line comments -//
+  multi line comments - /* */
+  xml comments - ///
+15.foreach is used to iterate through the collection
+	foreach(int item in Arr)
+	{
+	cw(item);
+	}
+   //value is retrieved from Arr in each iteration and gets stored in the item.
+17.different types of method parameters::
+	value parameters:: creates a copy of the parameters
+	reference parameters:: variables point to the same address
+	out parameters::when there is more than one return value.
+	Parameter arrays:: takes a variable number of parameters
+	public void fun(params int[] arr)
+	{
+	//
+	}
+	fun() // Pass-without arguments
+	fun(1,2,3) // Pass- List of arguments
+	int[] arr=new int[3];
+	fun(arr) //Pass-passing of array as an argument
+ Note:: there should not be more than one params keyword in the method.
+	if there are multiple arguments in the method then the params keyword should be the last one.
+ Diff b/w ref and out keyword::
+	for ref the values are initialized before the method calling and can be intialized in the method.
+	for out the values should be initialized in the method.
+
+18.Namespaces are used to Organize the Code.
+   Namespaces are used to avoid name clashes.
+	To avoid name clashes use
+	1.Fully Qualified name ProjectA.TeamA.ClassA.Print();
+	2.namespace Alias--using PATA=ProjectA.TeamA;
+			   PATA.ClassA.Print();
+   NameSpaces doesn't correspond to filename/assembly. They can be written in the separate files but belong to the same namespace.
+
+19.Classes are used to create the Custom data types
+   Constructors are used to intialize the class fields during creation of the object.
+   Constructors donot have return Value and should have the same name of the class Name.
+   By Default a default Constructor is provided by .NET compiler.
+   If we provide our own only Constructor(parameterized) then the default constructor will not be provided by .NET, Eventhough if we
+     want the default constructor then we need to create the default constructor.
+   Constructors are overloaded by Number and type of parameters
+   Calling of parameterized constructor by default constructor::
+	class Customer
+    {
+        string firstName;
+        string lastName;
+        public Customer():this("no fname","no lname")
+        {
+
+        }
+       
+        public Customer(string fname,string lname)
+        {
+            this.firstName = fname;
+            this.lastName = lname;
+        }
+        public void FullName()
+        {
+            Console.WriteLine("FullName ={0}",this.firstName+" "+this.lastName);
+        }
+    }
+
+20.If something that was not changed on per object basis then it is wise to declare that field as static.If it was declared as static 
+   then that particular field is shared across multiple objects results in performance of the application.
+   Note: Static Constructor is used to initialize the static fields of the class.
+	 Static Constructor is called once and only one time eventhough there are multiple class instances.
+	 this keyword is not used to refer the static fields.
+   	 Static Constructors are called even before the instance Constructors.
+  	 Access modifiers("public","private") should not be used before the Static Constructors because they are called evenbefore 
+	 the instantation of object.
+
+21.Inheritance is used to allow code reuse.
+	All the common code goes into the Base Class and specialized classes are "Derived" classes.
+	A class can be inherited from another class using ':'
+        class Parent
+	{
+	}
+	class Child:Parent
+	{
+	}  
+	While Creating of the Child Class object the Parent Class Constructor is called followed by child class constructor.
+	Child Class is a specialized class of Parent Class.
+	C# doesn't Supports multiple class inheritance.
+	to call the Base class specific constructor(parameterized) use "base" keyword for the child class Constructor
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            Child c = new Child("Kiran");
+        }
+    }
+
+   class Parent
+    {
+        public Parent()
+        {
+            Console.WriteLine("Parent Class Default Constructor");
+        }
+        public Parent(string message):this()
+        {
+            
+            Console.WriteLine("Parent Class parameterized Constructor"+message);
+        }
+    }
+    class Child:Parent
+    {
+        public Child()
+        {
+            Console.WriteLine("Child Class Default Constructor");
+        }
+        public Child(string message2):base(message2)
+        {
+            
+            Console.WriteLine("Child Class parameterized Constructor");
+        }
+    }
+
+	o/p::Parent Class Default Constructor
+	     Parent Class parameterized ConstructorKiran
+	     Child Class parameterized Constructor
+
+22.Method Hiding::when there are methods with the same name in both of the Parent class and Child class, the child class method 
+		  hides the parent class method.
+	There will be a warning if the hiding is intentional use new keyword to hide the child class method.
+	while an object is created the child method is invoked cozz., the parent class method is hidden.
+	to invoke the parent class method use::
+	1.base.parentclass_method();
+		 base.FullName();
+		 //Console.WriteLine(this.firstName + " " + this.LastName + "-Contractor");
+	2.casting the object reference of the child class with the parent class.
+		  PTE pte = new ConsoleApplication2.PTE();
+            	  pte.firstName = "Kiran";
+            	  pte.LastName = "Seeram";
+            
+            	  ((Employee)pte).FullName();
+	3.parent class reference variable pointing to the child class object.
+		   Employee pte = new ConsoleApplication2.PTE();
+            	   pte.firstName = "Kiran";
+            	   pte.LastName = "Seeram";
+            
+            	   pte.FullName();
+
+	//code
+		class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee pte = new ConsoleApplication2.PTE();
+            pte.firstName = "Kiran";
+            pte.LastName = "Seeram";
+            
+            pte.FullName();
+        }
+    }
+
+    class Employee
+    {
+       public string firstName;
+       public  string LastName;
+        public void FullName()
+        {
+            Console.WriteLine(this.firstName+" "+this.LastName);
+        }
+    }
+
+    class FTE : Employee
+    {
+
+    }
+    class PTE:Employee
+    {
+        int hrlyRate;
+        public new void FullName()
+        {
+            base.FullName();
+            Console.WriteLine(this.firstName + " " + this.LastName + "-Contractor");
+        }
+    }
+
+23.Polymorphism:: polymorphism enables us to get the derived class methods with the parent class reference variables during runtime.
+	for this the parent class method needs to be virtual and child class methods needs to be override
+	virtual keyword indicates that the methods in the derived class can be overrided if needed.
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee[] employees = new Employee[3];
+            employees[0] = new Employee();
+            employees[1] = new FTE();
+            employees[2] = new PTE();
+            foreach(Employee emp in employees)
+            {
+                emp.FullName();
+            }
+            PTE pte = new ConsoleApplication2.PTE();
+            pte.FullName();
+        }
+    }
+
+    class Employee
+    {
+       public string firstName="FN";
+       public  string LastName="LN";
+        public virtual void FullName()
+        {
+            Console.WriteLine(this.firstName+" "+this.LastName);
+        }
+    }
+
+    class FTE : Employee
+    {
+
+    }
+    class PTE:Employee
+    {
+        int hrlyRate;
+        public override void FullName()
+        {
+           
+            Console.WriteLine(this.firstName + " " + this.LastName + "-Contractor");
+        }
+    }
+
+24.Method overriding vs method hiding::
+	method overriding::when a parent class reference variable points to the child class object the child class method is invoked
+			   with the parent class reference variable(similar to polymorphism)
+	method hiding::when a parent class reference variable points to the child class object the parent class method is invoked due
+		       to which the parent class reference variable is pointing to the child class object even though the method is 
+		       hidden in the derived class.
+
+25.Method Overloading:: method overloading allows a class to have multiple functions with the same name.
+	method overloading can happen with the number,type(data_type),kind(ref,out,Value) called as signature.
+	method overloading cannot happen with the return type and with params keyword.
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
