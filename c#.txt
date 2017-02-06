@@ -254,7 +254,95 @@
 	method overloading can happen with the number,type(data_type),kind(ref,out,Value) called as signature.
 	method overloading cannot happen with the return type and with params keyword.
 
-		
+26.Properties::
+	Properties allows to set and get the field values without exposing them.
+	Class Customer
+	{
+	 	public int Id;
+		public string Name;
+	}
+	Customer c=new Customer();
+	c.Id=-101;
+	//user can set whatever value they want without restricting them.so to restrict and validate the date we can use either,
+	1.getter and setter methods
+	2.Properties
+	and making the fields to private.
+		//getter and setter
+		public class Customer
+{
+    int Id;
+    string name;
+    public void SetId(int ID)
+    {
+        if (ID <= 0)
+        {
+            throw new Exception("Negative ID is not accepted");
+        }
+        this.Id = ID;
+    }
+    public int getId()
+    {
+        return this.Id;
+    }
+    public void setName(string Name)
+    {
+        if (string.IsNullOrEmpty(Name))
+        {
+            throw new Exception("Name cannot be null or Empty");
+        }
+        this.name = Name;
+    }
+    public string getName()
+    {
+        return this.name;
+    }
+}
+
+//properties
+public class Customer
+{
+    int Id;
+    public int ID
+    {
+        set
+        {
+            if (value <= 0)
+            {
+                throw new Exception("Id cannot be negative");
+            }
+            else
+            {
+                this.Id = value;
+            }
+        }
+        get
+        {
+            return this.Id;
+        }
+    }
+    string name;
+    //if no validations and Checking
+       public string Name { set; get; }
+    int passmark = 35;
+    //read only field
+    public int PassMark
+    {
+        get
+        {
+            return this.passmark;
+        }
+    }
+    
+}
+	
+	Note:: there can be read only/write only properties
+	       If there are no validations for properties then public string Name{get;set;} .net will automatically create the 	       private fields during run time.
+
+
+
+	  
+
+	
 
 
 
