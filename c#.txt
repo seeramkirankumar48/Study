@@ -59,7 +59,7 @@
    Constructors donot have return Value and should have the same name of the class Name.
    By Default a default Constructor is provided by .NET compiler.
    If we provide our own only Constructor(parameterized) then the default constructor will not be provided by .NET, Eventhough if we
-     want the default constructor then we need to create the default constructor.
+     want the default constructor then we need to create the default constructor explicitly.
    Constructors are overloaded by Number and type of parameters
    Calling of parameterized constructor by default constructor::
 	class Customer
@@ -101,7 +101,7 @@
 	{
 	}  
 	While Creating of the Child Class object the Parent Class Constructor is called followed by child class constructor.
-	Child Class is a specialized class of Parent Class.
+	Child Class is a specialized class of Parent Class(because it includes both child as well as parent class properties).
 	C# doesn't Supports multiple class inheritance.
 	to call the Base class specific constructor(parameterized) use "base" keyword for the child class Constructor
 	class Program
@@ -251,7 +251,7 @@
 		       hidden in the derived class.
 
 25.Method Overloading:: method overloading allows a class to have multiple functions with the same name.
-	method overloading can happen with the number,type(data_type),kind(ref,out,Value) called as signature.
+	method overloading can happen with the number,type(data_type),kind(ref,out,Value) together called as signature.
 	method overloading cannot happen with the return type and with params keyword.
 
 26.Properties::
@@ -338,11 +338,413 @@ public class Customer
 	Note:: there can be read only/write only properties
 	       If there are no validations for properties then public string Name{get;set;} .net will automatically create the 	       private fields during run time.
 
-
-
-	  
-
+29.Structs are similar to classes but they have huge differences.
+	Structs(including variables,enums,object reference variables) are stored on stack
+	Objects(classes,delegates,Interfaces) are stored on Heap
+	The struct values are stored as long as there is a scope for the variable.
+	The reference for the object is lost where as the object remains in the Heap which is then cleaned by GC.
+	During the copy of the variables:
+	1.a new value of copy is created for structure data types.
+	2.for reference types a new variable is created but both of them point to the same variable.
+	circle c1=new circle();
+	circle c2=c1;
+	here c1 and c2 point to the same circle object. hence the object can be accessed by both of the variables.Either by c1 or c2.
 	
+	structs can't have destructors where as a class can.
+	structs can't have explicit parameterless constructor.
+	structs can't inherit from class.both struct and class can inherit from interfaces.
+	A class or struct cannot inherit from another struct because they are sealed type.
+	sealed types allow us to prevent a class from being inherited.
+
+30.Interfaces:
+	Interfaces have only declartions not implementations.
+	Use of access modifier before the declaration is an CT error(because the class or struct which is inherited is guaranteed to
+	provide the definition for it).Interface members are public by default.
+	There are no fields in interfaces.
+	A class can inherit from more than one interface (Multiple class inheritance is not supported.)
+	A interface can inherit from an another interface but the class that is inheriting from that interface must provide the
+	implementations for the entire interface chain.
+	We cannot create objects for interfaces because they dont provide the implementation.
+
+31.Explicit interface:
+	If Two interfaces contain the method's with same name and if this interface methods want to implement there own methods then,
+	we can use explicit interface.
+	while implementing the explicit implementation there should not be any access modifiers in which the implemenation is 	provided.
+	when a class has methods that are explictly implemented methods of interfaces then those cannot be called by object reference
+	variables of the class.Instead they can be accessed by :: ((I1)A).fun();	//	((I2)A).fun();
+
+	interface I1
+	{
+	void fun();
+	}
+	
+	interface I2
+	{
+	void fun();
+	}
+
+	class A:I1,I2
+	{
+	void I1.fun()
+	{
+	
+	}
+	
+	void I2.fun()
+	{
+	
+	}
+	}
+	
+	while calling the implemented methods use type casting:
+	((I1)A).fun();
+	It cannot be accessed by A.fun(); because compiler doesn't know which version of fun needs to be called.
+	To make a default behavior of one version::explicitly implement one method and implement interface for one method
+	
+	interface I1
+	{
+	void fun();
+	}
+	
+	interface I2
+	{
+	void fun();
+	}
+
+	class A:I1,I2
+	{
+	public void fun()
+	{
+	
+	}
+	
+	void I2.fun()
+	{
+	
+	}
+	} 
+
+	Default behavior of I1 is selected by calling A.fun();
+	To call the I2 method use ((I2)A).fun();
+
+32.Abstract class:
+	A class can contain the abstract members(methods,properties) but not mandatory.
+	An abstract class cannot be of sealed type.
+	If a class inherits an abstract class it has 2 options::
+	1.Implement the abstract methods of the base abstract class.
+	2.Make the inherited class an abstract method then it will provide a compulsion that whatever the class again inheriting
+	  this inherited class should implement all the abstract methods.
+	We cannot create objects for abstract class hence we will use it as a base class::
+	AbstractClass A= new InheritedClass
+	A.Method();
+
+33.Diff b/w Abstract and Interfaces::
+	1.An abstract classes can inherit from another interface or class where as an interface can inherit from another interface.
+	2.The default access modifier for abstract is private and for interface it is public.
+	3.Abstract classes can have fields but interfaces cannot have.
+	4.Abstract classes can have implementations but not the interfaces.
+
+34.Problems of multiple class inheritance:
+	when a class inherits from two classes and if those classes have the same method name then in the inherited class while
+	creating the object and while calling the method with the same name,compiler is unable to decide the which version of the 
+	method is to be called this usually defined to be an diamond problem.
+
+35.multiple inheritance by interfaces::	
+	since while inheriting there is an compulsion that inherited class should provide the implementation for the inherited 	members and interfaces also provide an explicit interface implementation so that they can have there own versions or even if
+	not there own version an common method of implementation is provided so that it will serve the purpose of both the 	interfaces, so multiple inheritance is achieved by interfaces.
+
+
+36.Delegate::A delegate is a type safe function pointer,i.e., a delegate signature must follow the same signature of the function 	     else will get an CT error.
+	     By Using Delegates, we can pass function as a parameter.
+	     We can pass the function as a parameter using the delegates.
+	 public  delegate void MyDel(string strMessage);
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MyDel del = new MyDel(GetMessage);
+            del("Welcome!!!");
+        }
+        public static void GetMessage(string strMessage)
+        {
+            Console.WriteLine(strMessage);
+        }
+    }
+
+37&38. delegate Program Sample::
+	Here to promote an Employee we need to constantly change the code for criteria based onthe Employee associated with. 	irrespective of that this can be achieved with delegates.
+	  class Program
+    {
+        static void Main(string[] args)
+        {
+            List<Employee> employees = new List<Employee>()
+            {
+                new Employee {Name="Kiran",Salary=10000,Age=23,Exp=2.2F },
+                new Employee {Name="Uday",Salary=12000,Age=23,Exp=1.5F },
+                new Employee {Name="Sandy",Salary=8000,Age=24,Exp=2.2F }
+            };
+            IsPromotable promote = new IsPromotable(Employee.PromoteBasedOnExperience);
+            Employee.PromoteEmployees(employees, promote);
+
+        }
+    }
+
+
+    public delegate bool IsPromotable(Employee emp);
+    public class Employee
+    {
+        public string Name { set; get; }
+        public int Salary { set; get; }
+        public int Age { set; get; }
+        public float Exp { set; get; }
+        public static void PromoteEmployees(List<Employee> empList,IsPromotable promote)
+        {
+            foreach(Employee emp in empList)
+            {
+               if(promote(emp))
+                {
+                    Console.WriteLine("{0} is Promoted based on Salary",emp.Name);
+                }
+            }
+        }
+
+        public static bool PromoteBasedOnSalary(Employee emp)
+        {
+            if (emp.Salary >= 10000)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool PromoteBasedOnExperience(Employee emp)
+        {
+            if (emp.Exp >= 2.0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+    }
+
+
+39.A multicast delegate is one which has references to more than one function.
+	1.Multicast delegate invokes the methods in the invocation list in the same order in which they have added.
+	2.To register a delegate use += to unregister use -=
+	3.when a delegate methods return the return type other than void the last end result that was retrieved is the method in the
+	last invocation list. on the similar lines it is same with the out parameter.
+	public delegate int MyDelegate();
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MyDelegate del = new MyDelegate(Method1);
+            del += Method2;
+            del += Method3;
+            int result = del();
+            Console.WriteLine("Last Result:{0}",result);
+
+        }
+        public static int Method1()
+        {
+            Console.WriteLine("Method1 Invocation");
+            return 1;
+        }
+        public static int Method2()
+        {
+            Console.WriteLine("Method2 Invocation");
+            return 2;
+        }
+        public static int Method3()
+        {
+            Console.WriteLine("Method3 Invocation");
+            return 3;
+        }
+    }
+	4.Mutlicast delegates are generally used in observer/design pattern.
+
+40.Excepton Handling::
+	An exception is an unforseen Error caused during runtime.
+	Exceptions can be handled by try,catch,finally blocks.
+	Exception(System.Exception) is the base class for all the Exception classes(FileNotFound,DirectoryNotFound,etc.,)
+	whenever a statement encounters an exception in the try block and it will immediately searches for suitable catch block, and
+	executes the further steps. In catch block generally the exceptions were logged in the Database.
+	the must executable statements are kept in the finally block so that they are guaranteed to be executed(they are not when an
+	exception occurs again in catch block and the finally code is not present in the finally block) generally the con.close() is 	closed in finally.
+	The exception class in catch block is kept last in the catch block or else it will throw CT error because it will generalise 
+	and guaranteed to be executed at first place.
+	 class Program
+    {
+        static void Main(string[] args)
+        {
+            StreamReader str = null;
+            try
+            {
+                str = new StreamReader(@"D:\Welcome1.txt");
+            }
+            catch(FileNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+               
+            
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                str = new StreamReader(@"D:\Welcome1.txt");
+
+            }
+            Console.WriteLine("Outer");
+            //Console.WriteLine(str.ReadToEnd());
+            //str.Close();
+        }
+    }
+	//ex.message prints the suitable error message // stacktrace tells at which line the error was occured.
+
+41.Inner Exception::
+		class Program
+    {
+        static void Main(string[] args)
+        {
+
+            int numerator;
+            int denominator;
+            try
+            { 
+            try
+            {
+                Console.WriteLine("Enter the Numerator:");
+                numerator = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter the Denominator:");
+                denominator = Convert.ToInt32(Console.ReadLine());
+                int result = numerator / denominator;
+                Console.WriteLine("Result = {0}",result);
+            }
+            catch(Exception ex)
+            {
+                //Error Logging
+                string fileName = @"D:\ErrorLog.txt";
+                if(File.Exists(fileName))
+                {
+                    StreamWriter str = new StreamWriter(@"D:\ErrorLog.txt");
+                    str.Write(ex.GetType().Name);
+                    str.WriteLine();
+                    str.Write(ex.Message);
+                        Console.WriteLine("Exception logged in {0}",fileName);
+                    str.Close();
+                }
+                else
+                {
+                    throw new FileNotFoundException("File Not found", ex);
+                }
+  
+            }
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine("Current Exception={0}",exception.Message);
+                if(exception.InnerException!=null) ///to check whether the inner exception is null
+                Console.WriteLine("Last Exception={0}",exception.InnerException);
+            }
+           
+        }
+    }
+
+42.CustomException::
+			    class Program
+    {
+        static void Main(string[] args)
+        {
+            throw new UserAlreadyLoggedInException("UserAlready Logged In");
+           
+        }
+    }
+
+    [Serializable]
+    public class UserAlreadyLoggedInException:Exception
+    {
+        public UserAlreadyLoggedInException():base()
+        {
+                
+        }
+        public UserAlreadyLoggedInException(string message):base(message)
+        {
+
+        }
+        public UserAlreadyLoggedInException(string message,Exception ex):base(message,ex)
+        {
+
+        }
+
+        public UserAlreadyLoggedInException(SerializationInfo info, StreamingContext context):base(info,context)
+        {
+
+        }
+    }
+
+
+
+44.Solving Exception Abuse::
+			    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                int numerator;
+                int denominator;
+                Console.WriteLine("Enter Numerator:");
+                bool IsNumerator = int.TryParse(Console.ReadLine(), out numerator);
+                Console.WriteLine("Enter Denominator:");
+                bool IsDenominator = int.TryParse(Console.ReadLine(), out denominator);
+                if (IsNumerator)
+                {
+                    if (IsDenominator && denominator != 0)
+                    {
+                        int result = numerator / denominator;
+                        Console.WriteLine("Result = {0}", denominator);
+                    }
+                    else
+                    {
+                        if (!IsDenominator)
+                        {
+                            Console.WriteLine("Please Enter the Integer Value for Denominator");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Denominator should not be zero");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Please Enter the Integer Value for Numerator");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+    }
+
+
+
+
+
+
+
 
 
 
