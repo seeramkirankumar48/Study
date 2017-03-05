@@ -570,6 +570,7 @@ public class Customer
         }
     }
 	4.Mutlicast delegates are generally used in observer/design pattern.
+	5.Delegates can be replaced by the lambda expressions.
 
 40.Excepton Handling::
 	An exception is an unforseen Error caused during runtime.
@@ -739,35 +740,428 @@ public class Customer
 
     }
 
+	1.while closing the connection objects check whether these objects are not null
+		if(con!=null)
+	2.while printing the inner exceptions check whether these objects are not null
+		if(ex.InnerException!=null)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+47.If a program uses set of integral values consider replacing them with enums this makes program more readable,maintainable.
 	
+		class Program
+    {
+        static void Main(string[] args)
+        {
+            Customer[] cust = new Customer[]{new Customer(){Name="Kiran",Gender=Gender.Male},
+            new Customer(){Name="Vinny",Gender=Gender.Female}};
+
+            //foreach (Customer item in cust)
+            //{
+            //    Console.WriteLine("Name = {0} && Gender= {1}",item.Name,Customer.GetGenderName(item.Gender));
+            //}
+
+            foreach (int item in Enum.GetValues(typeof(Gender)))
+            {
+                Console.WriteLine("Name = {0} && Value = {1}",Enum.GetName(typeof(Gender),item),item);
+            }
+        }
+    }
+
+    public enum Gender
+    {
+        Unknown,
+        Male,
+        Female
+    }
+    public class Customer
+    {
+        public string Name { set; get; }
+
+        public Gender Gender { set; get; }
+
+        public static string GetGenderName(Gender gender)
+        {
+            switch(gender)
+            {
+                case Gender.Unknown: return "UnKnown";
+                case Gender.Male: return "Male";
+                case Gender.Female: return "Female";
+                default: return "Gender not known";
+            }
+        }
+    }
+
+	1.Enum:: enums are enumerations or enumeration is a named integer constant.
+	2.Enum's are strongly typed constants hence an explicit cast is required.
+		int[] values =(int[])(Enum.GetValues(typeof(Gender)));
+	  We cannot Assign Enum of one type to the enum of another it is possible by explicit casting.
+	3.The default underlying type of enum is int.
+		to change the enum type use::
+				   public enum Gender: short
+    {
+        Unknown,
+        Male,
+        Female
+    }
+	4.the default value is 0 and it is incremented by 1.
+	5.enums are value types.
+	6.the typeof keyword is used to get the type -- int,short of enum.
+
+
+48.diff b/w types and type members::
+	types:: class,enums,delegates,interfaces,structs
+	typemembers: the members with in the types:: methods,ctors,properties,fields
+	
+	to expand/collapse a specific set of code include the code in the region.
+	#region properties
+	//consists of all the properties code//
+	#endregion
+
+	there are 5 types of access modifiers in c#
+	1.public -- public is accessed every where
+	2.private -- with in the containing type
+	3.protected -- within the containing type and types that derive from the containing type
+	4.internal -- in the whole assembly level.
+	5.protected internal -- combination of internal and protected
+	By default all the type members can have all the access modifiers -- default being private
+	the types can have internal and public -- default being internal
+	
+52.Attributes::
+ 	Attributes are used to add the declarative information. ths info is used at runtime.
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine(Calculator.Add(2,3));
+        }
+
+       
+    }
+
+    class Calculator
+    {
+        [Obsolete("use List<int> as this method is obsolete",true)] // the true includes that to raise 		the error or else a warning symbol is issued
+        public static int Add(int fn,int sn)
+        {
+            return fn+sn;
+        }
+        public static int Add(List<int> numbers)
+        {
+            int sum = 0;
+            foreach (int item in numbers)
+            {
+                sum += item;
+            }
+            return sum;
+        }
+    }
+
+53.Reflections::
+	Reflections are used to inspect the assemblies metadata at runtime.
+
+	uses::
+	1.while dragging the button from toolbox on to the designer in asp.net we will get all the 		properties list related to that button is the best example of reflection.
+	2.reflections are used for latebinding.
+	3.when there are different types of implemenatations and that particular implemenatation is 		read from config file. we can use reflection to this kind of a thing.
+
+		namespace ConsoleApplication2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Type t = Type.GetType("ConsoleApplication2.Customer");
+          
+           //properties list
+           PropertyInfo[] properties = t.GetProperties();
+           foreach (PropertyInfo item in properties)
+           {
+               Console.WriteLine(item.PropertyType.Name + " "+item.Name);
+           }
+           
+          Console.WriteLine();
+          //ctors list
+          ConstructorInfo[] constructors = t.GetConstructors();
+          foreach (ConstructorInfo item in constructors)
+          {
+              Console.WriteLine(item.ToString());
+          }
+
+          Console.WriteLine();
+          //methods list
+          MethodInfo[] methods = t.GetMethods();
+          foreach (MethodInfo item in methods)
+          {
+              Console.WriteLine(item.ReturnType.Name+" "+item.Name);
+          }
+
+        }
+    }
+
+    class Customer
+    {
+        public int custId { set; get; }
+        public string fname { set; get; }
+
+        public string lname { set; get; }
+
+        public Customer()
+        {
+            this.custId = -1;
+            this.fname = "Kiran";
+            this.lname = "Seeram";
+        }
+
+        public Customer(string fname,string lname)
+        {
+            this.custId = 101;
+            this.fname = fname;
+            this.lname = lname;
+        }
+
+        public string GetFullName(string fname,string lname)
+        {
+            return this.fname + this.lname;
+        }
+
+        public void GetId()
+        {
+            Console.WriteLine(this.custId);
+        }
+    }
+}
+
+
+	//Type class is present inside the system namespace
+	//to use all the methods of the Reflection use system.Reflection
+	// to get the type
+		1.Type t=Type.GetType("namespace.className")
+		2.Type t = typeof(ClassName);
+		3.Customer c1=new Customer();
+		  Type t = c1.GetType();
+
+
+55.Late Binding::
+
+
+
+
+
+
+
+
+56.Generics are allowed us to design classes and methods decoupled    from data types.
+	//Generics are available in System.Collections.Generic;
+		   
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool equals = Calculator<string>.Compare("ab", "ab");
+            Console.WriteLine(equals);
+        }
+        
+    }
+
+    class Calculator<T>
+    {
+        public static bool Compare(T a,T b)
+        {
+            return a.Equals(b);
+        }
+    }
+
+
+	Note:: the above compare function can be replace by the function parameters object.
+	By replacing with object type parameters there are 2 cons::
+	1.there should be an suitable boxing and unboxing operations
+	2.by calling the function 
+	  //Compare(5,"string") --- the compare fun takes int and 	string and doesn't show any CT error.
+	Hence, we will go for Generics.
+
+57.Override tostring() Method::
+	When we try to invoke (c.tostring()) the toString() method on the class instance it will return the namespace.classInstance_name
+	class Program
+    {
+        static void Main(string[] args)
+        {
+            Customer c = new Customer();
+            c.fname = "Kiran";
+            c.lname = "seeram";
+            Console.WriteLine(c.ToString()); //return 					ConsoleApplicaton2.Customer
+
+        }
+        
+    }
+
+    class Customer
+    {
+        public string fname { get; set; }
+
+        public string lname { get; set; }
+
+       
+    }
+
+	//If we want to override the tostring() method and want to provide the default behavior it is possible because each and every class inherits from base object class.
+		   class Program
+    {
+        static void Main(string[] args)
+        {
+            Customer c = new Customer();
+            c.fname = "Kiran";
+            c.lname = "seeram";
+           //string fullName = c.GetFullName();
+           //Console.WriteLine(fullName);
+
+            string fullName = c.ToString();
+            Console.WriteLine(fullName);
+
+        }
+        
+    }
+
+    class Customer
+    {
+        public string fname { get; set; }
+
+        public string lname { get; set; }
+
+        public override string ToString()
+        {
+            return this.fname + " " + this.lname;
+        } 
+
+        //public string GetFullName()
+        //{
+        //    return this.fname + " " + this.lname;
+        //}
+    }
+
+	//Here while invoking Customer class through its instance by calling tostring() method it will always call the overrided method and thus provides the fullName everytime through customer class.
+
+58.Override object.Equals Method::
+		   class Program
+    {
+        static void Main(string[] args)
+        {
+            Customer c1 = new Customer();
+            c1.fname = "Kiran";
+            c1.lname = "seeram";
+
+            Customer c2 = new Customer();
+            c2.fname = "Kiran";
+            c2.lname = "seeram";
+
+	    Customer c3=c2 // c3==c2 && c3.Equals(c2) returns true.
+		
+            Console.WriteLine(c1==c2);
+            Console.WriteLine(c1.Equals(c2));
+        }
+        
+    }
+
+    class Customer
+    {
+        public string fname { get; set; }
+
+        public string lname { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if(obj==null)
+            {
+                return false;
+            }
+            else if(!(obj is Customer))
+            {
+                return false;
+            }
+            return this.fname == ((Customer)obj).fname && this.lname == ((Customer)obj).lname;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.fname.GetHashCode() ^ this.lname.GetHashCode();
+        }
+    }
+
+
+
+	//while checking the equality for the value types and reference types the (==) && obj1.equals(obj2) both does the same functionality.
+	//while checking the equality for the reference types there are 2 things::
+	1.Referencing object Equality checking
+	2.obect values checking from both the objects.
+	//hence we cannot modify the (==) operator so we can modify the object1.Equals(object2) by overriding the base object function.
+	//It is mandatory that while overriding the equals method, we have to override the GetHashCode() functionality.
+
+
+59. diff b/w Convert.toString() and toString() functionality::
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Customer c = null;
+            Console.WriteLine(c.ToString());//doesnot checks for the 		error handling for null values and throws the 		nullReference Exception.
+            Console.WriteLine(Convert.ToString(c));//Handles Error 							Handling
+        }
+        
+    }
+
+    class Customer
+    {
+        public string fname { get; set; }
+
+        public string lname { get; set; }
+
+       
+    }	
+
+60.Diff b/w stringBuilder and string
+	strings are immutable objects.
+	StringBuilder is an mutable object.
+		
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string str = "c#";
+            str += " Video";
+            str += " Training";
+            str += " Tutorials";
+
+            Console.WriteLine(str);
+
+            Console.WriteLine();
+
+            StringBuilder stb = new StringBuilder("c#");
+            stb.Append(" Video");
+            stb.Append(" Training");
+            stb.Append(" Tutorials");
+
+            Console.WriteLine(stb.ToString());
+        }
+        
+    }
+
+	//Here, in a string variable the "str" variables is assigned 		mutlitple times.
+	//First the str variable is assigned with "c#";
+	while updating the str variable with new value the "c#" value 		remains in the heap and a new value "c# videos" is created in 		the Heap.
+	//Hence, there will be multiple str values in the Heap, and 	the variable is going to point one and only one value::
+	"C# Video Training Tutorials"
+	//By creating the string Builder it is going to point only one 	value and it is going to update that one particular value.
+	only.
+	//Therefore, whenever a string is going to update for multiple 	times then it is wise to go for the string builder
+	//The string builder is present in //System.Text; namespace
+	//The string class is present in System namespace.
+
+61.
+
+
 
 
 
