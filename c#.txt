@@ -1159,9 +1159,350 @@ public class Customer
 	//The string builder is present in //System.Text; namespace
 	//The string class is present in System namespace.
 
-61.
+61.Partial class::partial class is used to split the class into 2 or more physical files all these files are combined into one file after the compilation.partial keyword is used to split the struct or interface.
+
+	Ex:aspx--there will be 2 files under aspx file
+			--aspx.cs--used for coding
+			--aspx.designer.cs--used for declaration.
+
+62.Rules for partial classes::
+	1.All the parts spread across different files must specify the 	partial keyword
+	2.All the parts must specify the same access modifiers.
+	3.if any of the parts specify the abstract keyword then the 		entire file is abstract.
+	4.If any of the parts is sealed then the entire type is 	considered as sealed.
+	5.If any of the parts is inherited then the entire type is 	inherited.
+	6.c# doesn't support multiple class inheritance.different parts of the class must not inherit different base class.suppose if part 1 inherits Customer class and if part 2 includes Employee class and at the end both these are combined into a single file thus it inherits from two different classes Customer and Employee which often leads to multiple class inheritance.
+	7.Different partial classes can implement multiple interfaces.
+and the final type must implement all the methods of all the interfaces.
+	Ex: partial classes are -- SamplePartialClassOne
+				-- SamplePartialClassTwo
+		    interfaces are -- ICustomer,IEmployee
+			Methods are -- ICustomer -- CustomerMethod()
+				    -- IEmployee -- EmployeeMethod()
+	SamplePartialClassOne is inherting ICustomer
+	SamplePartialClassTwo is inherting IEmployee
+	Then both of the partial classes must implement the both of the methods.
+	Ex:if samplePartialClassOne is implementing Customer Method and if SamplePartialClassTwo is implementing both of the methods Customer and Employee Methods it will throw CT Error because as this method is implemented in one of the partial classes.
+	8.Any Methods that are defined in one of the partial classes are allowed to access in another partial classes and the other partial class members are allowed to access in the current partial class.
+
+63.Partial Methods::
+	1.A partial Method must contain in an partial class or partial struct.
+	2.Partial method must be created with partial keyword.
+	3.A partial method declaration consists of 2 parts
+		1.Method declaration
+		2.Method Implementation.
+	These can be in seperate files are in the same file.
+	it is an CT Error to provide the method declaration and implementation in the same place.
+	partial void Method()
+	{
+	//lines
+	}
+	Above code is an CT error.The actual code is as follows::
+	partial void Method();
+	partial void Show()
+	{
+	//lines
+	}--This is valid
+	4.The implementation for a partial method is optional.If we don't provide the implementation then compiler skips the signature and calls to that method.
+	partial void Show();
+	public void Print()
+	{
+	cw("Print Method");
+	Show();//while calling the Show Method it is not implemented 		However, the compiler skips the calling to that function.  
+	}
+	5.Partial methods are private by default, it is CT error to include private also.
+	6.It is a CT error to include the implementation and declaration at the same time.
+	partial void Method()
+	{
+	//lines
+	}--This shows CT error.
+	7.A partial method return type should be void including any other return type is CT error.
+	8.Signature of the partial method declaration must match with the signature of the partial method implementation.
+	9.A partial method can be implemented only once. trying to implement in multiple places is an CT error.
+	10.A partial method cannot have 	abstract,sealed,virtual,extern,override,new keywords
+
+64.Indexers::
+	indexers allow instances of class to be indexed just like arrays.
+	Ex::Session variables
+		Session["session1"]="Session1 started";
+		cw("Session 1 = {0}",Session["session1"]);
+		cw("Session 1 = {0}",Session[0]);
+	    syntax:: it is same as properties
+		public string this[int employeeId]
+		{
+			get {}
+			set {}
+		}
+
+65.Indexer Example::
+			  class Program
+    {
+        static void Main(string[] args)
+        {
+            Company c = new Company();
+            Console.WriteLine("Employee with Id:1 = "+c[1]);
+            Console.WriteLine("Employee with Id:2 = " + c[2]);
+            Console.WriteLine("Employee with Id:3 = " + c[3]);
+
+            c[1] = "Seeram Kiran Kumar";
+            Console.WriteLine("Employee with Id:1 = " + c[1]);// To change the Value
+        }
+    }
+
+    public class Company
+    {
+        List<Employee> listEmployees { get; set; }
+        public Company()
+        {
+            listEmployees = new List<Employee>();
+            listEmployees.Add(new Employee { Id = 1, fname = "Kiran", Gender = "Male" });
+            listEmployees.Add(new Employee { Id = 2, fname = "Sandy", Gender = "Male" });
+            listEmployees.Add(new Employee { Id = 3, fname = "Vinny", Gender = "Female" });
+        }
+
+        public string this[int employeeId]
+        {
+            get
+            {
+                return listEmployees.FirstOrDefault(emp => emp.Id == employeeId).fname;
+            }
+            set
+            {
+                listEmployees.FirstOrDefault(emp => emp.Id == employeeId).fname = value;
+            }
+        }
+    }
+
+    public class Employee
+    {
+        public int Id { get; set; }
+
+        public string fname { get; set; }
+
+        public string Gender { get; set; }
+    }
+
+66.Indexer overloading::
+	Indexers can be overloaded based on number and type of parameters.
+	Example program::
+			   class Program
+    {
+        static void Main(string[] args)
+        {
+            Company c = new Company();
+            Console.WriteLine("Employee with Id:1 = "+c[1]);
+            Console.WriteLine("Employee with Id:2 = " + c[2]);
+            Console.WriteLine("Employee with Id:3 = " + c[3]);
+
+            c[1] = "Seeram Kiran Kumar";
+            Console.WriteLine("Employee with Id:1 = " + c[1]);// To change the Value
+
+            Console.WriteLine("Male Employee Count = {0}",c["Male"]);
+            Console.WriteLine("Female Employee Count = {0}", c["Female"]);
+
+            //Changing the Gender
+
+            c["Male"] = "Female";
+            Console.WriteLine("Male Employee Count = {0}", c["Male"]);
+            Console.WriteLine("Female Employee Count = {0}", c["Female"]);
+
+        }
+    }
+
+    public class Company
+    {
+        List<Employee> listEmployees { get; set; }
+        public Company()
+        {
+            listEmployees = new List<Employee>();
+            listEmployees.Add(new Employee { Id = 1, fname = "Kiran", Gender = "Male" });
+            listEmployees.Add(new Employee { Id = 2, fname = "Sandy", Gender = "Male" });
+            listEmployees.Add(new Employee { Id = 3, fname = "Vinny", Gender = "Female" });
+        }
+
+        public string this[int employeeId]
+        {
+            get
+            {
+                return listEmployees.FirstOrDefault(emp => emp.Id == employeeId).fname;
+            }
+            set
+            {
+                listEmployees.FirstOrDefault(emp => emp.Id == employeeId).fname = value;
+            }
+        }
+
+        public string this[string Gender]
+        {
+            get
+            {
+                return listEmployees.Count(emp => emp.Gender == Gender).ToString();
+            }
+            set
+            {
+                foreach (Employee item in listEmployees)
+                {
+                    item.Gender = value;
+                }
+            }
+        }
+    }
+
+    public class Employee
+    {
+        public int Id { get; set; }
+
+        public string fname { get; set; }
+
+        public string Gender { get; set; }
+    }
+
+67.There are 4 ways that are used to make method parameters optional
+	1.params keyword
+	2.method overloading
+	3.Default parameters
+	4.Optional parameters
+	
+	1.params keyword::
+		class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Add(10, 20);
+        }
+
+        public static void Add(int firstNumber,int secondNumber,params int[] RestOfNumbers)
+        {
+            int result = firstNumber + secondNumber;
+            if(RestOfNumbers!=null)
+            {
+                foreach (int item in RestOfNumbers)
+                {
+                    result += item;
+                }
+            }
+            Console.WriteLine("Result = {0}",result);
+        }
+
+    }
+
+	//Here for Add Method we have passed only 2 parameters 10,20 but there is a third parameter in the function definition with params keyword.Eventhough if we not passed the third parameter it will not throw any CT error because if we provide the params then passing the parameters is optional.
+
+68.Making method parameters optional with method overloading::
+		   class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Add(10, 20);
+        }
+
+        public static void Add(int firstNumber, int secondNumber, int[] RestOfNumbers)
+        {
+            int result = firstNumber + secondNumber;
+            if (RestOfNumbers != null)
+            {
+                foreach (int item in RestOfNumbers)
+                {
+                    result += item;
+                }
+            }
+            Console.WriteLine("Result = {0}", result);
+        }
+        public static void Add(int firstNumber,int secondNumber)
+        {
+            Add(firstNumber,secondNumber,null);
+        }
 
 
+
+    }
+
+	//Here it is a CT error if we not pass the third parameter.hence, we will provide a method which takes 2 parameters and with in that parameter we'll call the actual method and make the third parameter actually passing the "null" value.
+	//There will be 2 methods if we want to pass more than 2 parameters then call the actual method.
+
+
+69.By Passing Default parameters::
+		   class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Add(10, 20);
+        }
+
+        public static void Add(int firstNumber, int secondNumber, int[] RestOfNumbers=null)
+        {
+            int result = firstNumber + secondNumber;
+            if (RestOfNumbers != null)
+            {
+                foreach (int item in RestOfNumbers)
+                {
+                    result += item;
+                }
+            }
+            Console.WriteLine("Result = {0}", result);
+        }
+ 
+    }
+
+	//the default parameters is that in the method definition we'll give the default parameter.If the user didn't pass that parameter then the parameter which we given as default will be called.
+	//the default parameter must appear after all the required parameters otherwise,it is a CT error.
+
+	Named Parameters::
+		If we want to pass the parameters and the method definition itself is an default parameter implementation then we can pass our required parameters by calling the name of that parameter(delimited by :) as follows::Show(1, c:10);
+	thus ignoring all other of the parameters.
+
+
+			class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Show(1, c:10);
+        }
+
+       public static void Show(int a,int b=2,int c=5)
+        {
+            Console.WriteLine("a = {0}",a);
+            Console.WriteLine("b = {0}", b);
+            Console.WriteLine("c = {0}", c);
+        }
+ 
+    }
+
+
+70.By making the method parameters optional::
+	To make a method parameter optional we need to include
+	System.Runtime.InteropServices in the program.
+	//give the extra attribute beside the parameter as [Optional] or [OptionalAttribute]-- the attribute keyword is optional here.
+
+		 class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Add(10, 20);
+        }
+
+        public static void Add(int firstNumber, int secondNumber,[Optional] int[] RestOfNumbers)
+        {
+            int result = firstNumber + secondNumber;
+            if (RestOfNumbers != null)
+            {
+                foreach (int item in RestOfNumbers)
+                {
+                    result += item;
+                }
+            }
+            Console.WriteLine("Result = {0}", result);
+        }
+ 
+    }
+
+
+71.	
 
 
 
