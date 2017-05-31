@@ -1,0 +1,76 @@
+public class Student{
+int i;
+String name;
+
+}
+
+
+1.types of instantation of objects::
+-------------------------------------
+A.by using the object reference variable
+	Student s=new Student();
+	s.i=100;//instantation using object reference variable.
+B.By using the methods.
+	void insert(int _i,String _name)
+	{
+		i=_i;
+		name=_name;
+	}
+	
+	Student s=new Student();
+	s.insert(1,"yyyy");//instantation using methods
+C.By using the constructors.
+	Student(int _i,string _name)
+	{
+		i=_i;
+		name=_name;
+	}
+	Student s=new Student(1,"yyyy"); // instantation through constructors
+	if it is a default constructor then the default values will be assigned to the instance variables.
+
+	
+2.Different types of variables creation::
+-------------------------------------------
+A.local variables --- variables inside the methods
+B.instance variables -- variables at class level but outside the methods (memory is allocated at the time of creation of object)
+c.static variables
+
+3.Different types of creation of objects::
+-------------------------------------------
+A.By using new keyword
+B.By using newInstance() method
+C.by using clone() method
+D.by using Factory() methods
+E.By deserialization.
+
+4.Ways of copying values from one constructor to another constructor:::
+-----------------------------------------------------------------------
+A.By using Constructor
+Student(student s)
+{
+i=s.i;
+name=s.name;
+}
+
+Student s=new Student(1,"yyyy");
+Student s1=new Student(s);
+
+B.By using instance variables.
+Student s=new Student(1,"yyyy");
+Student s1=new Student();
+s1.i=s.i;
+s1.name=s.name;
+
+C.Clone() method of object class
+
+5.Restrictions for static method::
+-----------------------------------
+A.The static method can not use non static data member or call non-static method directly.
+B.this and super cannot be used in static context.
+
+KeyPoints
+-------------
+1.Constructor returns the current class instance.
+2.All the objects are created in the Heap memory and the reference variables are created in the stack. for static variables the memory is allocated in the ClassArea.
+3.The static variables are commonly shared across all the objects of that particular class.
+4.
