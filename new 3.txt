@@ -73,4 +73,19 @@ KeyPoints
 1.Constructor returns the current class instance.
 2.All the objects are created in the Heap memory and the reference variables are created in the stack. for static variables the memory is allocated in the ClassArea.
 3.The static variables are commonly shared across all the objects of that particular class.
-4.
+4.java static block is called even before the constructors of the class.
+5.Static keyword is mainly used for memory management.
+6.IF we make any method final we cannot override it.
+7.if we make a class final we cannot extend it.
+8.if a class extends another class that contains the final method, this final method can be invoked in the subclass,but it cannot be overrided.
+9.a blank final variable is that it is declared in the class without initialization.
+10.to instate a blank final variable we can do that in the constructor.if it is static final variable, then we can instantiate using the static block.
+11.Runtime polymorphism can't be achieved for data members.
+12.If there is any method declared as abstract then the class must be declared as abstract class.
+13.
+
+
+Things to learn
+-------------------
+1.this keyword.
+2.InstanceOf operator.
